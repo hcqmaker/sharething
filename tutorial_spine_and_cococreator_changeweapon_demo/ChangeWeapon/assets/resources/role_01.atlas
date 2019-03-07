@@ -1,0 +1,40 @@
+
+role_01.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+role_01/center
+  rotate: true
+  xy: 98, 34
+  size: 27, 75
+  orig: 27, 75
+  offset: 0, 0
+  index: -1
+role_01/head
+  rotate: false
+  xy: 175, 3
+  size: 58, 58
+  orig: 58, 58
+  offset: 0, 0
+  index: -1
+role_01/wp_00
+  rotate: false
+  xy: 82, 2
+  size: 28, 23
+  orig: 28, 23
+  offset: 0, 0
+  index: -1
+role_01/wp_01
+  rotate: true
+  xy: 2, 2
+  size: 23, 78
+  orig: 23, 78
+  offset: 0, 0
+  index: -1
+role_01/wp_02
+  rotate: true
+  xy: 2, 27
+  size: 34, 94
+  orig: 34, 94
+  offset: 0, 0
+  index: -1
