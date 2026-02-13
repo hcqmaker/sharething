@@ -27,3 +27,6 @@
 ### photoshop_autosave_plugin_tileset.7z 
 * 对AutoExportPng说明和附加了 tiled的一个项目，可以方便测试
 
+### godot_pitaya.7z
+* TCP  godot 4.6 连接 pitaya v2@2.11.21 的客户端和服务器项目
+
