@@ -29,4 +29,9 @@
 
 ### godot_pitaya.7z
 * TCP  godot 4.6 连接 pitaya v2@2.11.21 的客户端和服务器项目
+* 博客上说明 https://hcqmaker.github.io/notes/godot_pitaya/
+
+### godot_pitaya_proto.7z
+* 在godot_pitaya基础上，添加对proto的支持, 需要了解大体上的可以参考上面
+* 博客上说明 https://hcqmaker.github.io/notes/godot_pitaya_proto/
 
