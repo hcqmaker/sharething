@@ -14,6 +14,7 @@
 
 ### 00_穴位图_多颜色.svg 
 * 十二经络图，中医穴位，包含任督二麦，加子午流注
+*  https://hcqmaker.github.io/other/ 添加方便的放大和，选择经络选项
 
 ### AutoExportPng.7z 
 ###### photoshop cc 2019 插件
