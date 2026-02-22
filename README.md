@@ -35,4 +35,7 @@
 ### godot_pitaya_proto.7z
 * 在godot_pitaya基础上，添加对proto的支持, 需要了解大体上的可以参考上面
 * 博客上说明 https://hcqmaker.github.io/notes/godot_pitaya_proto/
-
+### hcq.AutoBackUpPsd_ps2019cc自动备份插件.7z
+* ps 2019 cc 上的 自动备份到当前目录的小插件
+* 可以自行修改里面相关的内容，都是js,html相关的文本，直接打开和关闭就可以重新加载并测试
+* 目录位置 Adobe Photoshop CC 2019\Required\CEP\extensions
