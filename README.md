@@ -39,3 +39,6 @@
 * ps 2019 cc 上的 自动备份到当前目录的小插件
 * 可以自行修改里面相关的内容，都是js,html相关的文本，直接打开和关闭就可以重新加载并测试
 * 目录位置 Adobe Photoshop CC 2019\Required\CEP\extensions
+
+### input_example.gd
+* godot 输入的设置和保存加载 使用 input helper 插件 "Nathan Hoad" "4.7.0"
