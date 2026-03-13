@@ -42,3 +42,6 @@
 
 ### input_example.gd
 * godot 输入的设置和保存加载 使用 input helper 插件 "Nathan Hoad" "4.7.0"
+
+### godot_input_helper_ex
+* godot input的 input helper插件和自己写的一个例子input_example
