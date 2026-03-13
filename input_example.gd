@@ -8,101 +8,87 @@ const config_path = "user://setting.cfg"
 """
 文件内容大概是这样
 [control]
-ui_left0="A"
-ui_left1="W"
-key_maps="key:A;joypad:13;joypad:0|-1.000000;key:W"
+key_maps="key:G;joypad:13;joypad:0|-1.000000;key:H"
+my_jump0="G"
+my_jump1="H"
 """
 
 var config:ConfigFile = ConfigFile.new()
 
-const SETTING = "control"
-func _get_key_value(key:String, def:Variant = "") -> Variant: return config.get_value(SETTING, key, def)
-func _set_key_value(key:String, val:Variant) -> void: config.set_value(SETTING, key, val);config.save(config_path)
-
+func _get_key_value(key:String, def:Variant = "") -> Variant: 
+	return config.get_value("control", key, def)
+	
+func _set_key_value(key:String, val:Variant) -> void: 
+	config.set_value("control", key, val);
+	config.save(config_path)
+	
 #--------------------------------------------------
 ## 这里对应的是 【项目】【项目设置】【输入映射】
-const action_name:String = "ui_left"
-
-const input_key0:String = "ui_left0"
-const input_key1:String = "ui_left1"
-
-const input_map_action:String = "key_maps"
-
-var input0:String = "a"
-var input1:String = "left"
-
-# 这个索引的做法可以是一个操作绑定多个键位
-var changing_input_index:int = -1;
+const action_name:String = "my_jump"	# 对应 输入映射 中的名字
+const key_input_map:String = "key_maps"
 
 func _ready() -> void:
-	load_inputs();
-	
-func load_inputs() -> void:
 	$Label.text = action_name
-	
 	config.load(config_path)
-	input0 =_get_key_value(input_key0)
-	input1 =_get_key_value(input_key1)
 	
-	if (input0 != ""): $Button0.text = input0
-	if (input1 != ""): $Button1.text = input1
-	
-	# 加载使用 方式1
-	if (input0 != ""): InputHelper.deserialize_inputs_for_action(action_name, input0)
-	if (input1 != ""): InputHelper.deserialize_inputs_for_action(action_name, input1)
-	
-	# 加载使用 方式2
-	var des = _get_key_value(input_map_action)
+	var des = _get_key_value(key_input_map)
 	if (des != ""): InputHelper.deserialize_inputs_for_action(action_name,des)
-
-# 设置按键
+	
+	# !!!!! 警告这里要注意设置的处理【如果开始没有给设定，容易出现，空设定，直接就。。。。】
+	#var array = InputHelper.get_keyboard_inputs_for_action(action_name) # 限定在鼠标键盘的话
+	#var array = InputHelper.get_joypad_inputs_for_action(action_name) # 限定在手柄的话
+	var array = InputMap.action_get_events(action_name)
+	var input0 = InputHelper.get_label_for_input(array[0]);
+	var input1 = InputHelper.get_label_for_input(array[1]);
+	var device0 = InputHelper.get_device_from_event(array[0])
+	var device1 = InputHelper.get_device_from_event(array[1])
+	
+	$Button0.text = input0; $Button1.text = input1; $device0.text = device0; $device1.text = device1;
+	$Button0.toggle_mode = true;$Button1.toggle_mode = true;
+	$tip0.visible = false;$tip1.visible = false;
+	
 func _remap_key(event) -> void:
-	if changing_input_index == -1: return
-
+	if not $Button0.button_pressed and not $Button1.button_pressed: return
+	
 	var did_update: bool = false
-	var tmp_input:String = ""
-	if (event is InputEventKey or event is InputEventMouseButton) and event.is_pressed():
-		InputHelper.replace_keyboard_input_at_index(action_name, changing_input_index, event, true)
-		tmp_input = InputHelper.get_label_for_input(event)
-		did_update = true
+	var input_index:int = 0; # 限定第1个键位
+	var label:Label = null;
+	var btn:Button = null;
 
-	elif (event is InputEventJoypadButton or event is InputEventJoypadMotion) and event.is_pressed():
-		InputHelper.replace_joypad_input_at_index(action_name, changing_input_index, event, true)
-		tmp_input = InputHelper.get_label_for_input(event)
-		did_update = true
+	if event.is_pressed():
 
+		if ($Button0.button_pressed and (event is InputEventKey or event is InputEventMouseButton)):
+			InputHelper.replace_keyboard_input_at_index(action_name, input_index, event, true)
+			label = $device0; btn = $Button0; $tip0.visible = false;
+			did_update = true;
+		
+		if ($Button1.button_pressed and (event is InputEventJoypadButton or event is InputEventJoypadMotion)):
+			InputHelper.replace_joypad_input_at_index(action_name, input_index, event, true)
+			label = $device1; btn = $Button1; $tip1.visible = false;
+			did_update = true;
+			
 	if did_update:
 		accept_event()
-		update_labels(self.changing_input_index, tmp_input)
-		# 保存方式1
-		if (self.changing_input_index == 0):
-			_set_key_value(input_key0, tmp_input)
-		elif (self.changing_input_index == 1):
-			_set_key_value(input_key1, tmp_input)
-		# 保存方式2
-		var des = InputHelper.serialize_inputs_for_action(action_name)
-		_set_key_value(input_map_action, des)
-		print(des)
-		
-		self.changing_input_index = -1
+		label.text = InputHelper.get_device_from_event(event)
+		btn.text = InputHelper.get_label_for_input(event); 
+		btn.set_pressed_no_signal(false);btn.visible = true;
+		_set_key_value(key_input_map, InputHelper.serialize_inputs_for_action(action_name))
+			
 func _check_key(event) -> void:
 	if (Input.is_action_just_pressed(action_name)):
 		var tmp_input = InputHelper.get_label_for_input(event)
-		$Label2.text = " you pressed %s: key: %s"%[action_name, tmp_input]
-		pass
-		
-func _unhandled_input(event) -> void:
+		$label_log.text = " Pressed %s: key: %s"%[action_name, tmp_input]
+
+func _input(event: InputEvent) -> void:
 	_remap_key(event)
+	
+func _unhandled_input(event) -> void:
 	_check_key(event)
 
-func update_labels(idx:int,tmp_input:String):
-	var arr = self.get_children()
-	if (idx > -1 and idx < arr.size()):
-		(arr[idx] as Button).text = tmp_input;
-		(arr[idx] as Button).set_pressed_no_signal(false);
-
 func _on_button_0_pressed() -> void:
-	self.changing_input_index = 0
-	
+	$Button0.visible = false;
+	$tip0.visible = true;
+
 func _on_button_1_pressed() -> void:
-	self.changing_input_index = 1
+	$Button1.visible = false;
+	$tip1.visible = true;
